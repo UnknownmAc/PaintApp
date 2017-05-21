@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HTML5 Create HTML5 Canvas JavaScript Drawing App Example</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+  </head>
+  <body>
+    <div id="canvasDiv"></div>
+
+    <li>
+      <span class="highlight">Choose a color: </span>
+      <input type="color" onchange="handleColorClick(this.value)">
+    </li>
+
+    <li>
+      <span class="highlight">Choose Size : </span>
+      <input type="range" min="0" max="250" onchange="handleSizeSliderChange(this.value)">
+    </li>
+
+    <li>
+      <span class="highlight">Choose Opacity: </span>
+      <input type="range" min="0" max="1" step ="0.1" onchange="handleOpacitySliderChange(this.value)">
+    </li>
+
+    <script type="text/javascript"> $(document).ready(function() {
+    	 prepareCanvas();
+     });
+     </script>
+  </body>
+</html>
