@@ -16,6 +16,7 @@ var clickColor = new Array();
 var clickX = new Array();
 var clickY = new Array();
 var clickDrag = new Array();
+var pathArray = new Array();
 var paint;
 var globalAlpha = 1.0;
 
@@ -50,6 +51,19 @@ function prepareCanvas()
 	    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
 	    redraw();
 	  }
+		var coordX  = e.offsetX;
+    var coordY  = e.offsetY;
+		var pointLiesOnPath = false;
+		for(var i = 0;i < pathArray.length; i++) {
+			var path1 = pathArray[i];
+			if (context.isPointInPath(path1, coordX, coordY)) {
+	      e.target.style.cursor = 'wait';
+				pointLiesOnPath = true;
+	    }
+		}
+
+		if(!pointLiesOnPath)
+			e.target.style.cursor = 'defualt';
 	});
 
 	$('#canvas').mouseup(function(e){
@@ -96,18 +110,37 @@ function redraw(){
   context.strokeStyle = "#df4b26";
   context.lineJoin = "round";
   context.lineWidth = strokeWidth;
+	pathArray.length = 0;
+	var path = null;
 
   for(var i=0; i < clickX.length; i++) {
     context.beginPath();
     if(clickDrag[i] && i){
+			if(path !== null)
+				path.moveTo(clickX[i-1], clickY[i-1]);
       context.moveTo(clickX[i-1], clickY[i-1]);
      }else{
+			 if(path !== null) {
+				 path.closePath();
+				pathArray.push(path);
+			 }
+			 path = new Path2D();
+			 path.moveTo(clickX[i]-1, clickY[i]);
        context.moveTo(clickX[i]-1, clickY[i]);
      }
+		 if(path !== null) {
+		 	path.lineTo(clickX[i], clickY[i]);
+		 }
      context.lineTo(clickX[i], clickY[i]);
      context.closePath();
 		 context.strokeStyle = clickColor[i];
-     context.stroke();
+     //context.stroke();
   }
+	if(pathArray.length > 1)
+		console.log("pathArray.length : " + pathArray.length);
+	for(var i = 0; i < pathArray.length; i++) {
+		var path = pathArray[i];
+		context.stroke(path);
+	}
 	context.globalAlpha = globalAlpha;
 }
